@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <title>Fountain</title>
+
+     <style>
+        *{
+            margin: 0px;
+            border: 0px;
+            padding: 0px;
+            }
+            html, body{
+                background-color: 'black'
+            }
+
+    </style>
+</head>
+<body>
+<script>
+
+    window.onload = function () {
+
+
+        var canvas = document.createElement("canvas"),
+            c = canvas.getContext("2d");
+
+
+                    canvas.width = window.innerWidth-4;
+                    canvas.height = window.innerHeight-4;
+                    document.body.appendChild(canvas);
+                    
+        c.fillStyle="#000";
+        c.fillRect(0,0,canvas.width,canvas.height);
+
+        var   particles = [];
+        var   particleIndex = 0,
+              particleNum = 10,
+              gravity = 0.2;
+
+        function Particle() {
+            this.x = canvas.width/2;
+            this.y = canvas.height/2;
+            this.vx = Math.random() * 10 - 5;
+            this.vy = Math.random() * 10 - 5;
+            particleIndex++;
+            particles[particleIndex] = this;
+            this.id = particleIndex;
+            this.life = 0;
+            this.maxLife = Math.random() *   -50 + 100; //3D with minus value....
+            //this.color = "hsla("+parseInt(Math.random()*120, 10)+", 150%, 60%, 1)";
+        }
+
+        Particle.prototype.draw = function () {
+            this.x += this.vx * 2;
+            this.y += this.vy;
+            //this.vy += gravity;
+            this.life++;
+
+            if (this.life >= this.maxLife) {
+                delete particles[this.id];
+            }
+            c.fillStyle = "hsla("+parseInt(Math.random()*255,10)+", 100%, 50%, 1)";
+            c.fillRect(this.x, this.y, 1, 1);
+        };
+
+       
+
+        function animate() {
+            requestAnimationFrame(animate);
+            c.fillStyle = "black";
+            c.fillRect(0,0,canvas.width,canvas.height);
+            c.globalCompositeOperation = "lighter";
+            
+
+            for (let i in particles){
+                particles[i].draw();
+            }
+
+            for (let i = 0; i <= particleNum; i++) {
+                new Particle();
+            }
+        }
+        animate();
+
+/*
+        var posX = canvas.width/2,
+            posY = canvas.height/2,
+            velX=4,
+            velY=4,
+            gravity=1;
+
+        setInterval(function () {
+            c.fillStyle="#000";
+            c.fillRect(0,0,canvas.width,canvas.height);
+            if (posY > 500)
+            {
+                posY=500;
+                velY *= -0.3;
+                velX *= -1;
+
+            }
+            c.fillStyle="#fff";
+            c.fillRect(posX,posY,10,10);
+            c.globalCompositeOperation="Lighter";
+            posX += velX;
+            posY += velY;
+            velY += gravity;
+        }, 25)
+*/
+    };
+</script>
+</body>
+</html>
